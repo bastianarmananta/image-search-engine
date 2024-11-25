@@ -5,9 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from src.exceptions import ImageSearchEngineApiError, NotFoundError
 from utils.helper import create_exception_handler
-from src.routers.encoders import (
-    encoder_init,
-)
+from src.routers.encoders import encoder_init, encoder_status
 
 app = FastAPI(
     root_path="/api/v1",
@@ -41,6 +39,7 @@ app.add_middleware(
 
 app.include_router(health_check.router)
 app.include_router(encoder_init.router)
+app.include_router(encoder_status.router)
 
 app.add_exception_handler(
     exc_class_or_status_code=ImageSearchEngineApiError,

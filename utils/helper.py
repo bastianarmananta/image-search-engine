@@ -1,3 +1,4 @@
+import time
 import os
 import sys
 from pathlib import Path
@@ -54,6 +55,7 @@ async def grab_all_images(root_dir: str) -> list | None:
         )
 
     image_extensions = {".jpg", ".jpeg", ".png"}
+    time.sleep(120)
     image_paths = [
         str(path)
         for path in Path(root_dir).rglob("*")

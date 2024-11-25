@@ -1,3 +1,3 @@
 #/!bin/bash
 
-celery -A service.celery.app worker --loglevel=INFO
+celery -A services.celery.app worker --loglevel=INFO
