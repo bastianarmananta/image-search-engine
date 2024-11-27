@@ -3,7 +3,7 @@ from fastapi import FastAPI, status
 from src.routers import health_check
 from utils.helper import create_exception_handler
 from fastapi.middleware.cors import CORSMiddleware
-from services.postgre.model import database_migration
+from services.postgre.models import database_migration
 from starlette.middleware.sessions import SessionMiddleware
 from src.routers.encoders import monitor_encoder, initialize_encoder
 from services.postgre.connection import close_database_connection

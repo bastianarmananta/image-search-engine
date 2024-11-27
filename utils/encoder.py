@@ -10,11 +10,6 @@ from sentence_transformers import SentenceTransformer
 from sentence_transformers.SentenceTransformer import SentenceTransformer as model_type
 
 
-class Encoder:
-    def __init__(self, model: str):
-        self.model = model
-
-
 def init_model(model: str = "clip-ViT-B-32") -> SentenceTransformer:
     """
     Load Visual Transformers model.
