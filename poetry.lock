@@ -1080,6 +1080,16 @@ files = [
 ]
 
 [[package]]
+name = "petname"
+version = "2.6"
+description = "Generate human-readable, random object names"
+optional = false
+python-versions = "*"
+files = [
+    {file = "petname-2.6.tar.gz", hash = "sha256:981c31ef772356a373640d1bb7c67c102e0159eda14578c67a1c99d5b34c9e4c"},
+]
+
+[[package]]
 name = "pillow"
 version = "11.0.0"
 description = "Python Imaging Library (Fork)"
@@ -2520,4 +2530,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "1ec8078e72bf6d80fec697cc1c577e2f492027d4a1e8d9c09ff732f501bf9aea"
+content-hash = "4f07d13671162742291860bdcf154df1ea6ee1f53a620bbba8b2d864ffd536af"

@@ -1,26 +1,23 @@
 import os
-from utils.logger import logging
 from fastapi import APIRouter, status
-from src.schema.request_format import StartEncoderTask
-from src.schema.response import ResponseDefault, EncoderState
 from src.exceptions import NotFoundError
-from services.celery.app import grab_all_images
+from services.celery.tasks import start_encoder_task
+from src.schema.request_format import StartEncoderTask
+from src.schema.response import ResponseDefault, TaskResultState
 
 router = APIRouter(tags=["Encoder"])
 
 
 async def start_encoder(schema: StartEncoderTask) -> ResponseDefault:
-    logging.info("Endpoint Start Encoder.")
     response = ResponseDefault()
-    state = EncoderState()
+    state = TaskResultState()
 
     if not os.path.exists(path=schema.data_path):
-        raise NotFoundError(detail="Directory is not available on project")
+        raise NotFoundError(detail="Directory is not available on project.")
 
-    data_path_str = str(schema.data_path)
-    task = grab_all_images.delay(root_dir=data_path_str)
+    task = start_encoder_task.delay(root_path=schema.data_path)
+
     state.task_id = task.id
-
     response.message = "Task has been queued."
     response.data = state
 

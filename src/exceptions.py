@@ -19,3 +19,9 @@ class NotFoundError(ImageSearchEngineApiError):
     """Error occurred when target data not found."""
 
     pass
+
+
+class ServicesConnectionError(ImageSearchEngineApiError):
+    """Error occurred when try to connecting third party services."""
+
+    pass

@@ -1,11 +1,17 @@
 from src.secret import Config
 from fastapi import FastAPI, status
 from src.routers import health_check
-from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.sessions import SessionMiddleware
-from src.exceptions import ImageSearchEngineApiError, NotFoundError
 from utils.helper import create_exception_handler
-from src.routers.encoders import encoder_init, encoder_status
+from fastapi.middleware.cors import CORSMiddleware
+from services.postgre.model import database_migration
+from starlette.middleware.sessions import SessionMiddleware
+from src.routers.encoders import monitor_encoder, initialize_encoder
+from services.postgre.connection import close_database_connection
+from src.exceptions import (
+    ImageSearchEngineApiError,
+    NotFoundError,
+    ServicesConnectionError,
+)
 
 app = FastAPI(
     root_path="/api/v1",
@@ -16,14 +22,15 @@ app = FastAPI(
 
 config = Config()
 
-# @app.on_event("startup")
-# async def startup():
-#     await database_migration()
+
+@app.on_event("startup")
+async def startup():
+    await database_migration()
 
 
-# @app.on_event("shutdown")
-# async def shutdown():
-#     await database_connection().dispose()
+@app.on_event("shutdown")
+async def shutdown():
+    await close_database_connection()
 
 
 app.add_middleware(
@@ -38,8 +45,8 @@ app.add_middleware(
 )
 
 app.include_router(health_check.router)
-app.include_router(encoder_init.router)
-app.include_router(encoder_status.router)
+app.include_router(initialize_encoder.router)
+app.include_router(monitor_encoder.router)
 
 app.add_exception_handler(
     exc_class_or_status_code=ImageSearchEngineApiError,
@@ -55,5 +62,13 @@ app.add_exception_handler(
     handler=create_exception_handler(
         status_code=status.HTTP_404_NOT_FOUND,
         detail_message="File/data not found.",
+    ),
+)
+
+app.add_exception_handler(
+    exc_class_or_status_code=ServicesConnectionError,
+    handler=create_exception_handler(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail_message="Service currently not available.",
     ),
 )
